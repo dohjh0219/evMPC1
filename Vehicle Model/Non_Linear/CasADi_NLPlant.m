@@ -125,6 +125,6 @@ omega_RR_dot = (T_RR - r_e * F_x_RR) / J_w;
 xdot = vertcat(v_y_dot, r_dot, omega_FL_dot, omega_FR_dot, omega_RL_dot, omega_RR_dot);
 
 %% CasADi 함수 생성
-f = Function('f', {x, u}, {xdot});
+f = Function('nlplant_f', {x, u}, {xdot});
 
-f.generate('nlplant.c');
+f.generate('nlplant_f.c', struct('with_header', true));
