@@ -128,3 +128,4 @@ xdot = vertcat(v_y_dot, r_dot, omega_FL_dot, omega_FR_dot, omega_RL_dot, omega_R
 f = Function('nlplant_f', {x, u}, {xdot});
 
 f.generate('nlplant_f.c', struct('with_header', true));
+
