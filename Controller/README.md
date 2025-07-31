@@ -31,7 +31,7 @@ $$
 
 $$
 A_d = \exp(A \Delta t), \quad
-B_d = A^{-1}(A_d - I) B
+B_d = A^{-1}(A_d - I) B, \quad
 D_d = A^{-1}(A_d - I) D, \quad
 E_d = A^{-1}(A_d - I) E
 $$
