@@ -78,9 +78,9 @@ $$
 
 - 기계적 전력:
     
-    $$
-    P_{\text{mech}} = T_{ij} \cdot \omega_{ij} = \frac{T_{ij} \cdot v_x}{r_e}
-    $$
+$$
+P_{\text{mech}} = T_{ij} \cdot \omega_{ij} = \frac{T_{ij} \cdot v_x}{r_e}
+$$
     
 
 ### **🔗 종합 목적함수**
