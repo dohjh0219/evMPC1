@@ -33,7 +33,7 @@ vx0 = MX.sym('vx0');  % scheduling parameter
 
 A = [...
     -(lf^2*Caf + lr^2*Car)/(Iz*vx0),   -(lf*Caf - lr*Car)/Iz,                0;
-    -(lf*Caf + lr*Car)/(m*vx0^2) - 1,  -(Caf + Car)/(m*vx0),                0;
+    -(lf*Caf - lr*Car)/(m*vx0^2) - 1,  -(Caf + Car)/(m*vx0),                0;
     0,                                 0,                  -rho*Af*Cd*vx0/m];
 
 B = [...
