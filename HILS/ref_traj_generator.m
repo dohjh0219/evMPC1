@@ -157,7 +157,7 @@ grid on;
 
 %% File Export
 
-file_output = fopen('road_data.txt', 'w');
+file_output = fopen('driving_profile.txt', 'w');
 
 for i=1:1:length(t_road)
     fprintf(file_output,'%f %f %f %f %f %f \n',t_road(i),x_road(i),y_road(i),x1_ref(i),x2_ref(i),delta(i));
