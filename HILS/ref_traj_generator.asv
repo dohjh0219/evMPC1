@@ -1,0 +1,87 @@
+clc; clear; close all;
+
+%% Initial Setting
+
+% Simulation Setting
+t_end = 10;
+dt = 0.01;
+t_road = 0:dt:t_end;
+
+% Vehicle Spectification Setting
+Lf = 1.4;
+Lr = 1.6;
+L = Lf + Lr;
+
+m = 2000;
+Jz = 4000; 
+Cf = 13500;
+Cr = 15100;
+
+V = 15;
+
+%% Vehicle Model Definition(2-Dof Bicycle Model)
+
+A_continuous = [-2*(Cf+Cr)/(m*V), -1-2*(Cf*Lf-Cr*Lr)/(m*V^2);
+                -2*(Cf*Lf-Cr*Lr)/Jz, -2*(Cf*Lf^2+Cr*Lr^2)/(Jz*V)];
+
+B_continuous = [(2*Cf)/(m*V), (2*Cr)/(m*V);
+                (2*Cf*Lf)/Jz, -(2*Cr*Lr)/Jz];
+
+C_matrix = eye(2);
+D_matrix = [0];
+
+sys_c = ss(A_continuous, B_continuous, C_matrix, D_matrix);
+
+% Discretization : ZoH
+sys_d = c2d(sys_c, dt, 'zoh');
+Ad = sys_d.A;
+Bd = sys_d.B;
+
+%% Double Lane Change Scenario Generate
+
+steering_start_time = 1.0;
+degree = 2.0;
+delta_dot_rad = deg2rad(degree);
+
+delta = zeros(size(t_road));
+
+for k = 1:length(t_road)
+    time_now = t_road(k);
+    
+    if time_now > steering_start_time && time_now <= steering_start_time + 2.5
+        delta(k) = delta_dot_rad * sin(pi/2 * (time_now - steering_start_time) / (0.25 * 2.5));
+    elseif time_now > steering_start_time + 3.3 && time_now <= steering_start_time + 5.8
+        delta(k) = -delta_dot_rad * sin(pi/2 * (time_now - (steering_start_time) + 1.7) / (0.25 * 2.5));
+    else
+        delta(k) = 0;
+    end
+end
+
+%% Reference State Generate
+
+% Reference Side Slip angle
+x1_ref = ( Lr - (Lf*m*V^2)/(2*Cr*L) ) / ( L + (m*V^2*(Lr*Cr-Lf*Cf))/(2*Cf*Cr*L) ) * delta;
+
+% Reference Yaw Rate
+x2_ref = V / ( L + (m*V^2*(Lr*Cr-Lf*Cf))/(2*Cf*Cr*L) ) * delta;
+
+%% Global Trajectory Generate
+
+x_road = zeros(size(t_road));
+y_road = zeros(size(t_road));
+theta = zeros(size(t_road));
+
+x_road(1) = 0;
+y_road(1) = 0;
+theta(1) = 0;
+
+for i = 1:length(t_road)-1
+    theta(i+1) = theta(i) + x2_ref(i) * dt;
+
+    x_road(i+1) = x_road(i) + V * cos(theta(i+1)) * dt;
+    y_road(i+1) = y_road(i) + V * sin(theta(i+1)) * dt;
+end
+
+%% Export Profile
+
+fid = fopen()
