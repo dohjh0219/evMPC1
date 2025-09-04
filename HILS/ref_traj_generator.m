@@ -134,5 +134,5 @@ subplot(3, 1, 3);
 plot(t_road, delta, 'r-');
 title('Steering Profile');
 xlabel('Time [s]');
-ylabel('Steering Angle [deg]');
+ylabel('Steering Angle [rad]');
 grid on;
