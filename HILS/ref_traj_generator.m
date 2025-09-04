@@ -131,7 +131,7 @@ grid on;
 
 % 조향각 프로파일
 subplot(3, 1, 3);
-plot(t_road, rad2deg(delta), 'r-');
+plot(t_road, delta, 'r-');
 title('Steering Profile');
 xlabel('Time [s]');
 ylabel('Steering Angle [deg]');
