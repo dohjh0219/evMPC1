@@ -1,0 +1,14 @@
+---------------------------------------------------
+   🚀 [System] 자동화 테스트를 시작합니다...
+   📂 결과 저장 경로: /Users/junhyeongdoh/Desktop/evMPC/evMPC1/Results
+---------------------------------------------------
+테스트 리포트를 생성하는 중입니다. 기다려 주십시오.
+    테스트 리포트 내용을 준비하는 중입니다.
+    테스트 리포트에 내용을 추가하는 중입니다.
+    테스트 리포트를 파일에 쓰는 중입니다.
+테스트 리포트가 다음 위치에 저장되었습니다.
+ <a href="matlab:open('/Users/junhyeongdoh/Desktop/evMPC/evMPC1/Results/TestReport.pdf')">/Users/junhyeongdoh/Desktop/evMPC/evMPC1/Results/TestReport.pdf</a>
+ 
+---------------------------------------------------
+   ✅ [Success] 모든 테스트를 통과했습니다!
+---------------------------------------------------
