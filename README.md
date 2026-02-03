@@ -33,8 +33,8 @@ MATLAB 스크립트를 통해 자동으로 테스트를 수행하고 리포트�
 
 ### ✅ Automated Test Report
 * **Test Tool:** `matlab.unittest.TestRunner`
-* **Log File:** [test_log.txt](results/test_log.txt)
-* **Full Report:** [TestReport.pdf](results/TestReport.pdf) (Download to view)
+* **Log File:** [test_log.txt](Results/test_log.txt)
+* **Full Report:** [TestReport.pdf](Results/TestReport.pdf) (Download to view)
 
 ### Traceability Status
 - [x] **[SFR-001]** Output Limit (800Nm) -> **Verified** by `tests/t_SafetyLimiter.m`
