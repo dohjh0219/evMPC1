@@ -15,7 +15,7 @@
 
 | SRS ID | Requirement Description | Implementation (Block/File) | Test Case ID | Status |
 |:------:|:-----------------------|:---------------------------:|:------------:|:------:|
-| **SFR-001** | 출력 토크 800Nm 제한 | `Safety_Limiter.slx` (예정) | TC-SFR-001 | ⬜ Open |
+| **SFR-001** | 출력 토크 800Nm 제한 | `Safety_Limiter.slx` (예정) | TC-SFR-001 | 🚧 In Progress |
 | **FR-001** | 요 모멘트 계산 | `Yaw_Controller.slx` (예정) | TC-FR-001 | ⬜ Open |
 | **FR-002** | LQR 게인 스케줄링 | `LQR_Gain_Map.m` (예정) | TC-FR-002 | ⬜ Open |
 
