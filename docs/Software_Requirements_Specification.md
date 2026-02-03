@@ -1,42 +1,30 @@
-소프트웨어 요구사항 명세서 (Software Requirements Specification)
-항목	내용
-프로젝트명	전기차 토크 벡터링 제어 시스템 (evMPC)
-문서 버전	v1.0
-작성자	도준형
-작성일	2025-09-12
-<br>
+# Software Requirements Specification (SRS)
 
-1. 개요 (Overview)
-본 문서는 전기차(EV)의 주행 안정성 향상을 위한 토크 벡터링 제어기 소프트웨어의 요구사항을 정의한다. 이 소프트웨어는 Simulink로 제작된 정밀 차량 모델과 연동하는 HIL(Hardware-in-the-Loop) 환경에서 Teensy 4.1 마이크로컨트롤러에 이식되어 동작하는 것을 목표로 한다.
+## 1. Project Information
+| Item | Details |
+|------|---------|
+| **Project Name** | EV Torque Vectoring Control System (evMPC) |
+| **Version** | v1.0 |
+| **Author** | Junhyeong Doh |
+| **Last Updated** | 2025-09-12 |
+| **Target Hardware** | Teensy 4.1 (ARM Cortex-M7) |
 
-모든 요구사항은 기능, 성능, 안전, 인터페이스의 네 가지 범주로 분류되며, 각 요구사항은 고유 ID를 가진다. 이 ID는 향후 설계, 구현, 테스트 과정에서 추적성 확보를 위해 사용된다.
+## 2. Overview
+본 문서는 전기차(EV)의 주행 안정성 향상을 위한 토크 벡터링 제어기 소프트웨어의 요구사항을 정의한다. 본 시스템은 Simulink로 제작된 정밀 차량 모델과 연동하는 HIL(Hardware-in-the-Loop) 환경에서 동작하며, ISO 26262 기능안전 표준을 준수하여 설계되었다.
 
-2. 기능 요구사항 (Functional Requirements - FR)
-[FR-001] 요 모멘트 계산: 제어기는 차량의 현재 상태(종방향 속도, 요레이트, 조향각)를 입력받아, 운전자가 의도하는 목표 요레이트를 추종하기 위한 추가적인 요 모멘트(Yaw Moment)를 계산해야 한다.
+## 3. Requirements
 
-[FR-002] LQR 게인 스케줄링: 제어기는 사전에 계산된 속도-LQR 게인 테이블을 참조하여, 현재 차량 속도에 맞는 최적의 LQR 제어 게인을 실시간으로 적용해야 한다.
+### 3.1. Functional Requirements (FR)
+| ID | Requirement Description | Verification Method |
+|----|------------------------|---------------------|
+| **FR-001** | **요 모멘트 계산**<br>제어기는 차량의 현재 상태(종방향 속도, 요레이트, 조향각)를 입력받아, 목표 요레이트를 추종하기 위한 추가 요 모멘트($M_z$)를 계산해야 한다. | Unit Test (TC-FR-01) |
+| **FR-002** | **LQR 게인 스케줄링**<br>제어기는 사전에 정의된 `Velocity-Gain Lookup Table`을 참조하여, 현재 차속에 맞는 최적의 LQR 게인 $K$를 10ms 주기로 갱신해야 한다. | Model Simulation |
+| **FR-003** | **LPV-MPC 제어**<br>제어기는 LPV 모델을 기반으로 예측 구간(Prediction Horizon) 동안의 거동을 예측하고, 제약 조건을 만족하는 최적 제어 입력을 산출해야 한다. | Model Simulation |
+| **FR-004** | **제어기 상태 관리**<br>제어기는 `Standby`, `Active`, `Fault` 상태를 가지며, 진단 결과에 따라 상태 전이 다이어그램(Stateflow)대로 동작해야 한다. | Stateflow Test |
 
-[FR-003] LPV-MPC 제어: 제어기는 선형 시변(LPV) 모델을 기반으로 미래 차량의 거동을 예측하고, 제약 조건을 만족하는 최적의 제어 입력을 계산해야 한다.
-
-[FR-004] 제어기 상태 관리: 제어기는 '대기(Standby)', '동작(Active)', '오류(Fault)' 상태를 가져야 하며, 외부 신호나 내부 진단 결과에 따라 상태를 안전하게 전환할 수 있어야 한다.
-
-3. 성능 요구사항 (Performance Requirements - PERF)
-[PERF-001] 실행 시간: 제어 알고리즘(상태 입력부터 제어 출력까지)의 전체 실행 시간은 HIL 시스템의 제어 주기인 10ms를 초과해서는 안 된다.
-
-[PERF-002] 요레이트 추종 정확도: 'Double Lane Change' 표준 시험 시나리오(80 km/h)에서, 제어기는 목표 요레이트를 5% 이내의 RMS 오차율로 추종해야 한다.
-
-[PERF-003] 동작 속도 범위: 제어기는 차량 속도 20 km/h 부터 120 km/h 범위 내에서 안정적으로 동작해야 한다.
-
-4. 안전 요구사항 (Safety Requirements - SFR)
-[SFR-001] 출력 제한: 제어기가 계산하는 최종 요 모멘트의 크기는 액추에이터의 물리적 한계를 고려하여 사전에 정의된 값(예: ±800Nm)을 절대 초과해서는 안 된다. (Saturation)
-
-[SFR-002] 실행 시간 감시: 펌웨어는 제어 루프의 실행 시간을 감시하는 워치독(Watchdog) 메커니즘을 포함해야 하며, 실행 시간이 [PERF-001] 요구사항을 위반할 경우 시스템을 안전 상태(예: 제어 출력 0)로 전환해야 한다.
-
-[SFR-003] 입력 신호 범위 검사: 제어기는 입력받는 센서 값(속도, 조향각 등)이 물리적으로 유효한 범위 내에 있는지 매 스텝 검사해야 한다. 유효 범위를 벗어난 값이 감지될 경우, '오류(Fault)' 상태로 전환해야 한다.
-
-5. 인터페이스 요구사항 (Interface Requirements - IFR)
-[IFR-001] 입력 인터페이스: 제어기는 Simulink Plant 모델로부터 UART 시리얼 통신을 통해 차량 상태 데이터 패킷을 수신해야 한다.
-
-[IFR-002] 출력 인터페이스: 제어기는 계산된 최종 요 모멘트 값을 UART 시리얼 통신을 통해 Simulink Plant 모델로 송신해야 한다.
-
-[IFR-003] 통신 프로토콜: 입출력 데이터 패킷의 구조(시작 바이트, 데이터 필드, 체크섬 등)는 사전에 정의된 프로토콜을 따라야 한다.
+### 3.2. Performance Requirements (PERF)
+| ID | Requirement Description | Success Criteria |
+|----|------------------------|------------------|
+| **PERF-001** | **실행 시간 (Real-time constraints)**<br>전체 제어 알고리즘의 연산 시간(Turn-around time)은 제어 주기인 **10ms**를 초과해서는 안 된다. | Profiling Report |
+| **PERF-002** | **추종 정확도**<br>ISO 3888-1 (Double Lane Change) 시나리오(80kph)에서, 목표 요레이트 대비 RMS 오차율은 **5% 이내**여야 한다. | HIL Simulation |
+| **PERF-003** | **동작 범위**<br>제어기는 차량 속도 **20 ~ 120
